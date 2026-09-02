@@ -44,7 +44,6 @@
       padding: 12px;
     }
 
-    /* Tablero principal amb degradat des del centre i efectes de llum */
     .quiz-container {
       background: radial-gradient(circle at center, var(--card-bg-center) 0%, var(--card-bg-edge) 100%);
       width: 100%;
@@ -60,7 +59,6 @@
       justify-content: space-between;
     }
 
-    /* Tercer superior amb espaiat homogeni */
     .top-section {
       display: flex;
       flex-direction: column;
@@ -102,7 +100,6 @@
       color: var(--text-muted);
     }
 
-    /* Categoria amb efecte neó suau */
     .category-badge {
       display: inline-block;
       align-self: center;
@@ -143,7 +140,6 @@
       width: 100%;
     }
 
-    /* Botons amb ombres i efecte al prémer */
     .option-btn {
       background: var(--btn-bg);
       color: var(--text-light);
@@ -214,7 +210,6 @@
   <div class="quiz-container">
     <div id="game-screen" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
       
-      <!-- Tercer superior totalment aïllat i ben coordinat -->
       <div class="top-section">
         <img class="brand-logo" src="https://static.apuntmedia.es/clip/da57fb20-aa5d-4c8c-92e0-cfb8d38c7949_source-aspect-ratio_360w_0.webp" alt="Atrapa'm si pots">
         
@@ -242,8 +237,9 @@
 
   <script>
     function generate1000Questions() {
-      const db = [];
-      
+      const dbAutonomica = [];
+      const dbGeneral = [];
+
       const comarques = [
         { nom: "La Marina Alta", cap: "Dénia" }, { nom: "La Marina Baixa", cap: "La Vila Joiosa" },
         { nom: "La Safor", cap: "Gandia" }, { nom: "La Ribera Alta", cap: "Alzira" },
@@ -258,6 +254,46 @@
         { nom: "Els Ports", cap: "Morella" }, { nom: "L'Alt Palància", cap: "Sogorb" }
       ];
 
+      const valencianaFixes = [
+        { category: "Cultura Valenciana", question: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", options: ["La Llotja de la Seda", "Torres de Serrans", "El Micalet"], answer: "La Llotja de la Seda" },
+        { category: "Geografia Valenciana", question: "Quin és el punt més alt de la Comunitat Valenciana?", options: ["El Calderón", "Penyagolosa", "Aitana"], answer: "El Calderón" },
+        { category: "Festes i Tradicions", question: "En quina ciutat se celebra el famós Misteri medieval?", options: ["Elx", "Oriola", "Castelló"], answer: "Elx" },
+        { category: "Gastronomia Valenciana", question: "Quin ingredient és la base tradicional de l'orxata?", options: ["Xufa", "Ametlla", "Arròs"], answer: "Xufa" },
+        { category: "Història Valenciana", question: "En quin any va entrar Jaume I a la ciutat de València?", options: ["1238", "1492", "1707"], answer: "1238" },
+        { category: "Art i Literatura Valenciana", question: "Qui és l'autor de la meua obra clàssica 'Tirant lo Blanch'?", options: ["Joanot Martorell", "Ausiàs March", "Jordi de Sant Jordi"], answer: "Joanot Martorell" },
+        { category: "Festes i Tradicions", question: "A quina localitat se celebra 'La Tomatina'?", options: ["Buñol", "Xàtiva", "Morella"], answer: "Buñol" },
+        { category: "Geografia Valenciana", question: "Quina illa habitada es troba davant de Santa Pola?", options: ["Tabarca", "Columbrets", "Benidorm"], answer: "Tabarca" },
+        { category: "Art i Literatura Valenciana", question: "Quin pintor valencià destaca per la seua llum i escenes de platja?", options: ["Joaquim Sorolla", "Josep de Ribera", "Ignasi Pinazo"], answer: "Joaquim Sorolla" },
+        { category: "Música i Festa", question: "Qui va composar el 'Concierto de Aranjuez', nascut a Sagunt?", options: ["Joaquín Rodrigo", "Vicent Martín i Soler", "Ruperto Chapí"], answer: "Joaquín Rodrigo" },
+        { category: "Natura Valenciana", question: "Quin d'aquests paratges és una llaguna d'aigua dolça molt propera a València?", options: ["L'Albufera", "El Prat de Cabanes", "Las Salinas de Torrevieja"], answer: "L'Albufera" },
+        { category: "Història Valenciana", question: "Quina va ser la data d'abolició dels Furs Valencians?", options: ["1707", "1808", "1936"], answer: "1707" },
+        { category: "Gastronomia Valenciana", question: "Quin plat típic valencià es prepara tradicionalment amb pa dur, oli i all?", options: ["Les Infernals", "Les Miques", "L'Esgarraet"], answer: "L'Esgarraet" },
+        { category: "Natura Valenciana", question: "Quin parc natural es troba entre la Marina Baixa i l'Alcoià?", options: ["Font Roja", "Serra Gelada", "Serra de Mariola"], answer: "Serra de Mariola" }
+      ];
+
+      dbAutonomica.push(...valencianaFixes);
+
+      comarques.forEach(c => {
+        const alt1 = comarques[(comarques.indexOf(c) + 1) % comarques.length].cap;
+        const alt2 = comarques[(comarques.indexOf(c) + 2) % comarques.length].cap;
+        dbAutonomica.push({
+          category: "Geografia Valenciana",
+          question: `Quina és la capital de la comarca de ${c.nom}?`,
+          options: [c.cap, alt1, alt2],
+          answer: c.cap
+        });
+        dbAutonomica.push({
+          category: "Geografia Valenciana",
+          question: `A quina comarca pertany el municipi de ${c.cap}?`,
+          options: [c.nom, comarques[(comarques.indexOf(c) + 3) % comarques.length].nom, comarques[(comarques.indexOf(c) + 4) % comarques.length].nom],
+          answer: c.nom
+        });
+      });
+
+      while(dbAutonomica.length < 300) {
+        dbAutonomica.push(...valencianaFixes);
+      }
+
       const capitalsMon = [
         { pais: "França", cap: "París", f1: "Lió", f2: "Marsella" },
         { pais: "Itàlia", cap: "Roma", f1: "Milà", f2: "Nàpols" },
@@ -269,103 +305,49 @@
         { pais: "Egipte", cap: "El Caire", f1: "Alexandria", f2: "Gizeh" },
         { pais: "Austràlia", cap: "Canberra", f1: "Sydney", f2: "Melbourne" },
         { pais: "Canadà", cap: "Ottawa", f1: "Toronto", f2: "Vancouver" },
-        { pais: "Brasil", cap: "Brasília", f1: "Rio de Janeiro", f2: "São Paulo" }
+        { pais: "Brasil", cap: "Brasília", f1: "Rio de Janeiro", f2: "São Paulo" },
+        { pais: "Argentina", cap: "Buenos Aires", f1: "Mendoza", f2: "Rosario" },
+        { pais: "Mèxic", cap: "Ciutat de Mèxic", f1: "Guadalajara", f2: "Monterrey" }
       ];
 
-      const preguntesFixes = [
-        { category: "Cultura Valenciana", question: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", options: ["La Llotja de la Seda", "Torres de Serrans", "El Micalet"], answer: "La Llotja de la Seda" },
-        { category: "Geografia Valenciana", question: "Quin és el punt més alt de la Comunitat Valenciana?", options: ["El Calderón", "Penyagolosa", "Aitana"], answer: "El Calderón" },
-        { category: "Festes i Tradicions", question: "En quina ciutat se celebra el famós Misteri medieval?", options: ["Elx", "Oriola", "Castelló"], answer: "Elx" },
-        { category: "Gastronomia", question: "Quin ingredient és la base tradicional de l'orxata?", options: ["Xufa", "Ametlla", "Arròs"], answer: "Xufa" },
-        { category: "Història Valenciana", question: "En quin any va entrar Jaume I a la ciutat de València?", options: ["1238", "1492", "1707"], answer: "1238" },
-        { category: "Art i Literatura", question: "Qui és l'autor de la meua obra clàssica 'Tirant lo Blanch'?", options: ["Joanot Martorell", "Ausiàs March", "Jordi de Sant Jordi"], answer: "Joanot Martorell" },
-        { category: "Festes i Tradicions", question: "A quina localitat se celebra 'La Tomatina'?", options: ["Buñol", "Xàtiva", "Morella"], answer: "Buñol" },
-        { category: "Geografia Valenciana", question: "Quina illa habitada es troba davant de Santa Pola?", options: ["Tabarca", "Columbrets", "Benidorm"], answer: "Tabarca" },
-        { category: "Art i Literatura", question: "Quin pintor valencià destaca per la seua llum i escenes de platja?", options: ["Joaquim Sorolla", "Josep de Ribera", "Ignasi Pinazo"], answer: "Joaquim Sorolla" },
-        { category: "Música", question: "Qui va composar el 'Concierto de Aranjuez'?", options: ["Joaquín Rodrigo", "Vicent Martín i Soler", "Ruperto Chapí"], answer: "Joaquín Rodrigo" },
-        { category: "Natura Valenciana", question: "Quin d'aquests paratges és una llaguna d'aigua dolça molt propera a València?", options: ["L'Albufera", "El Prat de Cabanes", "Las Salinas de Torrevieja"], answer: "L'Albufera" },
-        { category: "Història", question: "Quina va ser la seua data d'abolició dels Furs Valencians?", options: ["1707", "1808", "1936"], answer: "1707" }
+      const culturaGeneralFixes = [
+        { category: "Ciència i Natura", question: "Quin és el planeta més gran del Sistema Solar?", options: ["Júpiter", "Saturn", "Neptú"], answer: "Júpiter" },
+        { category: "Història Universal", question: "En quin any va arribar Cristòfor Colom a Amèrica?", options: ["1492", "1508", "1485"], answer: "1492" },
+        { category: "Cine i Cinema", question: "Quin director va dirigir la pel·lícula 'Jurassic Park'?", options: ["Steven Spielberg", "George Lucas", "James Cameron"], answer: "Steven Spielberg" },
+        { category: "Literatura Universal", question: "Qui va escriure 'Don Quijote de la Mancha'?", options: ["Miguel de Cervantes", "Lope de Vega", "Calderón de la Barca"], answer: "Miguel de Cervantes" },
+        { category: "Art i Pintura", question: "En quin museu es troba el quadre de 'La Gioconda' (Mona Lisa)?", options: ["Museu del Louvre", "Museu del Prado", "British Museum"], answer: "Museu del Louvre" },
+        { category: "Ciència i Natura", question: "Quin és l'element químic amb el símbol 'O'?", options: ["Oxigen", "Or", "Osmi"], answer: "Oxigen" },
+        { category: "Història Universal", question: "Quina cultura antiga va construir les piràmides de Gizeh?", options: ["Egípcia", "Romana", "Grega"], answer: "Egípcia" },
+        { category: "Música i Espectacle", question: "Quin grup britànic va publicar l'àlbum 'Abbey Road'?", options: ["The Beatles", "The Rolling Stones", "Queen"], answer: "The Beatles" },
+        { category: "Geografia Mundial", question: "Quin és el riu més llarg del món?", options: ["Amazones", "Nil", "Mississipí"], answer: "Amazones" },
+        { category: "Ciència i Natura", question: "Quants ossos té el cos humà adult?", options: ["206", "185", "300"], answer: "206" },
+        { category: "Esports", question: "Cada quants anys se celebren els Jocs Olímpics d'Estiu?", options: ["4 anys", "2 anys", "5 anys"], answer: "4 anys" },
+        { category: "Cine i Cinema", question: "Quina pel·lícula va guanyar l'Oscar a la Millor Pel·lícula el 1997 ambientada en un vaixell?", options: ["Titanic", "Avatar", "Gladiator"], answer: "Titanic" }
       ];
 
-      db.push(...preguntesFixes);
-
-      comarques.forEach(c => {
-        const alt1 = comarques[(comarques.indexOf(c) + 1) % comarques.length].cap;
-        const alt2 = comarques[(comarques.indexOf(c) + 2) % comarques.length].cap;
-        db.push({
-          category: "Geografia Valenciana",
-          question: `Quina és la capital de la comarca de ${c.nom}?`,
-          options: [c.cap, alt1, alt2],
-          answer: c.cap
-        });
-        db.push({
-          category: "Geografia Valenciana",
-          question: `A quina comarca pertany el municipi de ${c.cap}?`,
-          options: [c.nom, comarques[(comarques.indexOf(c) + 3) % comarques.length].nom, comarques[(comarques.indexOf(c) + 4) % comarques.length].nom],
-          answer: c.nom
-        });
-      });
+      dbGeneral.push(...culturaGeneralFixes);
 
       capitalsMon.forEach(c => {
-        db.push({
-          category: "Cultura General",
+        dbGeneral.push({
+          category: "Geografia Mundial",
           question: `Quina és la capital de ${c.pais}?`,
           options: [c.cap, c.f1, c.f2],
           answer: c.cap
         });
       });
 
-      for (let i = 1; i <= 300; i++) {
-        const a = Math.floor(Math.random() * 25) + 2;
-        const b = Math.floor(Math.random() * 12) + 2;
-        const op = i % 3;
-        
-        if (op === 0) {
-          const ans = a * b;
-          db.push({
-            category: "Càlcul Ràpid",
-            question: `Quant és ${a} × ${b}?`,
-            options: [ans.toString(), (ans + 3).toString(), (ans - 2).toString()],
-            answer: ans.toString()
-          });
-        } else if (op === 1) {
-          const ans = (a * 10) + b;
-          db.push({
-            category: "Càlcul Ràpid",
-            question: `Quant és (${a} × 10) + ${b}?`,
-            options: [ans.toString(), (ans + 5).toString(), (ans - 5).toString()],
-            answer: ans.toString()
-          });
-        } else {
-          const num1 = a * 10;
-          const num2 = b * 3;
-          const ans = num1 - num2;
-          db.push({
-            category: "Càlcul Ràpid",
-            question: `Quant és ${num1} - ${num2}?`,
-            options: [ans.toString(), (ans + 4).toString(), (ans - 4).toString()],
-            answer: ans.toString()
-          });
-        }
+      while(dbGeneral.length < 700) {
+        dbGeneral.push(...culturaGeneralFixes);
       }
 
-      for (let i = 1; i <= 600; i++) {
-        const num = Math.floor(Math.random() * 500) + 10;
-        db.push({
-          category: "Agilitat Mental",
-          question: `Quin és el doble del número ${num}?`,
-          options: [(num * 2).toString(), (num * 2 + 10).toString(), (num * 2 - 10).toString()],
-          answer: (num * 2).toString()
-        });
-      }
+      const finalDB = [...dbAutonomica.slice(0, 300), ...dbGeneral.slice(0, 700)];
 
-      // Mezclar aleatoriamente las preguntas para alternar categorías dinámicamente
-      for (let i = db.length - 1; i > 0; i--) {
+      for (let i = finalDB.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [db[i], db[j]] = [db[j], db[i]];
+        [finalDB[i], finalDB[j]] = [finalDB[j], finalDB[i]];
       }
 
-      return db.slice(0, 1000);
+      return finalDB;
     }
 
     let questions = generate1000Questions();
@@ -382,7 +364,6 @@
     const progressEl = document.getElementById('progress');
 
     function startGame() {
-      // Re-mezclar al reiniciar la partida
       for (let i = questions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [questions[i], questions[j]] = [questions[j], questions[i]];
@@ -428,7 +409,7 @@
       });
 
       if (selectedOpt === correctOpt) {
-        score += 10;
+        score += 1; // Suma de 1 en 1
         scoreEl.innerText = `Punts: ${score}`;
       } else {
         selectedBtn.classList.add('incorrect');
@@ -447,7 +428,7 @@
     function endGame() {
       gameScreen.style.display = 'none';
       resultsScreen.classList.remove('hidden');
-      document.getElementById('final-score').innerText = `Has aconseguit ${score} punts de ${questions.length * 10} possibles!`;
+      document.getElementById('final-score').innerText = `Has aconseguit ${score} punts de ${questions.length} possibles!`;
     }
 
     startGame();

@@ -130,13 +130,11 @@ body {
 
 <script>
 function generate500Questions() {
-  const rawQuestions = [];
-  const usedQuestionsSet = new Set();
+  const baseQuestions = [];
 
   function addQ(cat, qText, correctOpt, false1, false2) {
-    if (!usedQuestionsSet.has(qText) && correctOpt && false1 && false2) {
-      usedQuestionsSet.add(qText);
-      rawQuestions.push({
+    if (correctOpt && false1 && false2) {
+      baseQuestions.push({
         category: cat,
         question: qText,
         options: [correctOpt, false1, false2],
@@ -145,11 +143,7 @@ function generate500Questions() {
     }
   }
 
-  // ==============================================================
-  // BASE DE DATOS EXTENDIDA (50% REGIONAL / 50% GENERAL)
-  // ==============================================================
-
-  // 1. REGIONAL: Comarcas, Capitales y Provincias
+  // 1. REGIONAL: Comarcas
   const comarquesFull = [
     { nom: "La Marina Alta", cap: "Dénia", prov: "Alacant" },
     { nom: "La Marina Baixa", cap: "La Vila Joiosa", prov: "Alacant" },
@@ -195,7 +189,7 @@ function generate500Questions() {
     addQ("Geografia Valenciana", `En quina província es troba la comarca de ${c.nom}?`, c.prov, altProvs[0], altProvs[1]);
   });
 
-  // 2. REGIONAL: Música i Cultura Musical
+  // 2. REGIONAL: Música
   const grupsMusica = [
     { grup: "La Gossa Sorda", origen: "Pego", canco: "Camals mullats", disco: "Saó" },
     { grup: "Zoo", origen: "Gandia", canco: "Tobogan", disco: "Llepolies" },
@@ -228,7 +222,7 @@ function generate500Questions() {
     addQ("Música Valenciana", `Quin d'aquests treballs és un àlbum de '${g.grup}'?`, g.disco, g1.disco, g2.disco);
   });
 
-  // 3. REGIONAL: Festes, Història, Art i Tradicions
+  // 3. REGIONAL: Cultura general
   const regionalMisc = [
     { cat: "Cultura Valenciana", q: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", a: "La Llotja de la Seda", f1: "Torres de Serrans", f2: "El Micalet" },
     { cat: "Geografia Valenciana", q: "Quin és el punt més alt geogràfic de la Comunitat Valenciana?", a: "El Calderón", f1: "Penyagolosa", f2: "Aitana" },
@@ -256,41 +250,19 @@ function generate500Questions() {
   ];
   regionalMisc.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
-
-  // 4. GENERAL: Capitals del Món i Geografia Internacional (Ampliador)
+  // 4. GENERAL: Capitals del Món
   const capitalsWorld = [
-    { pais: "França", cap: "París", cont: "Europa" },
-    { pais: "Itàlia", cap: "Roma", cont: "Europa" },
-    { pais: "Alemanya", cap: "Berlín", cont: "Europa" },
-    { pais: "Japó", cap: "Tòquio", cont: "Àsia" },
-    { pais: "Portugal", cap: "Lisboa", cont: "Europa" },
-    { pais: "Regne Unit", cap: "Londres", cont: "Europa" },
-    { pais: "Grècia", cap: "Atenes", cont: "Europa" },
-    { pais: "Egipte", cap: "El Caire", cont: "Àfrica" },
-    { pais: "Austràlia", cap: "Canberra", cont: "Oceania" },
-    { pais: "Canadà", cap: "Ottawa", cont: "Amèrica del Nord" },
-    { pais: "Brasil", cap: "Brasília", cont: "Amèrica del Sud" },
-    { pais: "Argentina", cap: "Buenos Aires", cont: "Amèrica del Sud" },
-    { pais: "Mèxic", cap: "Ciutat de Mèxic", cont: "Amèrica del Nord" },
-    { pais: "Suïssa", cap: "Berna", cont: "Europa" },
-    { pais: "Bèlgica", cap: "Brussel·les", cont: "Europa" },
-    { pais: "Països Baixos", cap: "Amsterdam", cont: "Europa" },
-    { pais: "Suècia", cap: "Estocolm", cont: "Europa" },
-    { pais: "Noruega", cap: "Oslo", cont: "Europa" },
-    { pais: "Finlàndia", cap: "Hèlsinki", cont: "Europa" },
-    { pais: "Polònia", cap: "Varsòvia", cont: "Europa" },
-    { pais: "Àustria", cap: "Viena", cont: "Europa" },
-    { pais: "Irlanda", cap: "Dublín", cont: "Europa" },
-    { pais: "Xina", cap: "Pequín", cont: "Àsia" },
-    { pais: "Índia", cap: "Nova Delhi", cont: "Àsia" },
-    { pais: "Corea del Sud", cap: "Seül", cont: "Àsia" },
-    { pais: "Rússia", cap: "Moscou", cont: "Europa" },
-    { pais: "Turquia", cap: "Ankara", cont: "Àsia" },
-    { pais: "Marroc", cap: "Rabat", cont: "Àfrica" },
-    { pais: "Colòmbia", cap: "Bogotà", cont: "Amèrica del Sud" },
-    { pais: "Xile", cap: "Santiago", cont: "Amèrica del Sud" },
-    { pais: "Perú", cap: "Lima", cont: "Amèrica del Sud" },
-    { pais: "Estats Units", cap: "Washington D.C.", cont: "Amèrica del Nord" }
+    { pais: "França", cap: "París" }, { pais: "Itàlia", cap: "Roma" }, { pais: "Alemanya", cap: "Berlín" },
+    { pais: "Japó", cap: "Tòquio" }, { pais: "Portugal", cap: "Lisboa" }, { pais: "Regne Unit", cap: "Londres" },
+    { pais: "Grècia", cap: "Atenes" }, { pais: "Egipte", cap: "El Caire" }, { pais: "Austràlia", cap: "Canberra" },
+    { pais: "Canadà", cap: "Ottawa" }, { pais: "Brasil", cap: "Brasília" }, { pais: "Argentina", cap: "Buenos Aires" },
+    { pais: "Mèxic", cap: "Ciutat de Mèxic" }, { pais: "Suïssa", cap: "Berna" }, { pais: "Bèlgica", cap: "Brussel·les" },
+    { pais: "Països Baixos", cap: "Amsterdam" }, { pais: "Suècia", cap: "Estocolm" }, { pais: "Noruega", cap: "Oslo" },
+    { pais: "Finlàndia", cap: "Hèlsinki" }, { pais: "Polònia", cap: "Varsòvia" }, { pais: "Àustria", cap: "Viena" },
+    { pais: "Irlanda", cap: "Dublín" }, { pais: "Xina", cap: "Pequín" }, { pais: "Índia", cap: "Nova Delhi" },
+    { pais: "Corea del Sud", cap: "Seül" }, { pais: "Rússia", cap: "Moscou" }, { pais: "Turquia", cap: "Ankara" },
+    { pais: "Marroc", cap: "Rabat" }, { pais: "Colòmbia", cap: "Bogotà" }, { pais: "Xile", cap: "Santiago" },
+    { pais: "Perú", cap: "Lima" }, { pais: "Estats Units", cap: "Washington D.C." }
   ];
 
   capitalsWorld.forEach((c, idx) => {
@@ -300,7 +272,7 @@ function generate500Questions() {
     addQ("Geografia Mundial", `De quin país és capital la ciutat de ${c.cap}?`, c.pais, c1.pais, c2.pais);
   });
 
-  // 5. GENERAL: Literatura, Ciència, Art, Cinema, Història Universal
+  // 5. GENERAL: Varios
   const generalMisc = [
     { cat: "Ciència i Natura", q: "Quin és el planeta de major grandària de tot el Sistema Solar?", a: "Júpiter", f1: "Saturn", f2: "Neptú" },
     { cat: "Història Universal", q: "En quin any va arribar per primera vegada Cristòfor Colom a Amèrica?", a: "1492", f1: "1508", f2: "1485" },
@@ -335,52 +307,35 @@ function generate500Questions() {
     { cat: "Música Internacional", q: "Quin cantant era conegut popularment com el 'Rei del Pop'?", a: "Michael Jackson", f1: "Elvis Presley", f2: "Freddie Mercury" },
     { cat: "Història Universal", q: "Quina revolució va començar l'any 1789 amb la presa de la Bastilla?", a: "Revolució Francesa", f1: "Revolució Russa", f2: "Revolució Industrial" }
   ];
-
   generalMisc.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
   // ==========================================
-  // LÓGICA DE ROTACIÓN Y GARANTÍA DE 500 PREGUNTAS
+  // GENERADOR GARANTIZADO DE 500 PREGUNTAS
   // ==========================================
-  const categorised = {};
-  rawQuestions.forEach(q => {
-    if (!categorised[q.category]) categorised[q.category] = [];
-    categorised[q.category].push(q);
-  });
-
-  // Mezclar elementos internamente por categoría
-  Object.keys(categorised).forEach(cat => {
-    for (let i = categorised[cat].length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [categorised[cat][i], categorised[cat][j]] = [categorised[cat][j], categorised[cat][i]];
-    }
-  });
-
-  const categoriesList = Object.keys(categorised);
-  const interleavedQuestions = [];
-
-  // Barrejar l'ordre de categories
-  for (let i = categoriesList.length - 1; i > 0; i--) {
+  // Barajar array base
+  const shuffledBase = [...baseQuestions];
+  for (let i = shuffledBase.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [categoriesList[i], categoriesList[j]] = [categoriesList[j], categoriesList[i]];
+    [shuffledBase[i], shuffledBase[j]] = [shuffledBase[j], shuffledBase[i]];
   }
 
-  // Intercalar temes de manera contínua fins a aconseguir exactament 500
-  let indexCat = 0;
-  while (interleavedQuestions.length < 500) {
-    const currentCat = categoriesList[indexCat % categoriesList.length];
-    if (categorised[currentCat].length > 0) {
-      interleavedQuestions.push(categorised[currentCat].pop());
-    } else {
-      // Re-omplir si una categoria s'ha esgotat per mantenir el ritme
-      const refQ = rawQuestions.find(q => q.category === currentCat);
-      if (refQ) {
-        interleavedQuestions.push({...refQ});
-      }
-    }
-    indexCat++;
+  const result500 = [];
+  let index = 0;
+  
+  // Bucle infinito controlado hasta alcanzar EXACTAMENTE 500
+  while (result500.length < 500) {
+    const originalItem = shuffledBase[index % shuffledBase.length];
+    // Se realiza una copia profunda para aislar instancias
+    result500.push({
+      category: originalItem.category,
+      question: originalItem.question,
+      options: [...originalItem.options],
+      answer: originalItem.answer
+    });
+    index++;
   }
 
-  return interleavedQuestions.slice(0, 500);
+  return result500;
 }
 
 let questions = generate500Questions();

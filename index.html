@@ -58,7 +58,6 @@ body {
 .question-box { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px 6px; }
 .question-text { font-size: 1.1rem; font-weight: 600; line-height: 1.35; color: var(--text-light); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-/* Boto d'avançar entre pregunta i opcions */
 .next-micro-btn {
   align-self: center;
   margin: 6px 0 10px 0;
@@ -110,7 +109,6 @@ body {
       <h2 class="question-text" id="question">Carregant...</h2>
     </div>
 
-    <!-- Botó intercalat entre la pregunta i les opcions -->
     <button id="next-btn" class="next-micro-btn hidden" onclick="nextQuestion()">Següent ➔</button>
 
     <div class="options-grid" id="options"></div>
@@ -136,7 +134,7 @@ function generate500Questions() {
   const usedQuestionsSet = new Set();
 
   function addQ(cat, qText, correctOpt, false1, false2) {
-    if (!usedQuestionsSet.has(qText)) {
+    if (!usedQuestionsSet.has(qText) && correctOpt && false1 && false2) {
       usedQuestionsSet.add(qText);
       rawQuestions.push({
         category: cat,
@@ -147,65 +145,91 @@ function generate500Questions() {
     }
   }
 
-  // ==========================================
-  // BANCO DE PREGUNTAS (REGIONAL + GENERAL)
-  // ==========================================
+  // ==============================================================
+  // BASE DE DATOS EXTENDIDA (50% REGIONAL / 50% GENERAL)
+  // ==============================================================
 
-  // Comarcas y Capitales
-  const comarques = [
-    { nom: "La Marina Alta", cap: "Dénia" }, { nom: "La Marina Baixa", cap: "La Vila Joiosa" },
-    { nom: "La Safor", cap: "Gandia" }, { nom: "La Ribera Alta", cap: "Alzira" },
-    { nom: "La Ribera Baixa", cap: "Sueca" }, { nom: "L'Alcoià", cap: "Alcoi" },
-    { nom: "El Comtat", cap: "Cocentaina" }, { nom: "L'Alt Maestrat", cap: "Albocàsser" },
-    { nom: "El Baix Maestrat", cap: "Vinaròs" }, { nom: "La Plana Alta", cap: "Castelló de la Plana" },
-    { nom: "La Plana Baixa", cap: "Borriana" }, { nom: "El Camp de Morvedre", cap: "Sagunt" },
-    { nom: "El Camp de Túria", cap: "Llíria" }, { nom: "L'Horta Nord", cap: "Puçol" },
-    { nom: "L'Horta Sud", cap: "Torrent" }, { nom: "La Vall d'Albaida", cap: "Ontinyent" },
-    { nom: "El Baix Vinalopó", cap: "Elx" }, { nom: "L'Alt Vinalopó", cap: "Villena" },
-    { nom: "El Vinalopó Mitjà", cap: "Elda" }, { nom: "La Vega Baixa", cap: "Oriola" },
-    { nom: "Els Ports", cap: "Morella" }, { nom: "L'Alt Palància", cap: "Sogorb" },
-    { nom: "La Foia de Bunyol", cap: "Bunyol" }, { nom: "El Valle de Ayora-Cofrentes", cap: "Aiora" },
-    { nom: "La Canal de Navarrés", cap: "Enguera" }, { nom: "La Costera", cap: "Xàtiva" },
-    { nom: "El Los Serranos", cap: "Xelva" }
+  // 1. REGIONAL: Comarcas, Capitales y Provincias
+  const comarquesFull = [
+    { nom: "La Marina Alta", cap: "Dénia", prov: "Alacant" },
+    { nom: "La Marina Baixa", cap: "La Vila Joiosa", prov: "Alacant" },
+    { nom: "La Safor", cap: "Gandia", prov: "València" },
+    { nom: "La Ribera Alta", cap: "Alzira", prov: "València" },
+    { nom: "La Ribera Baixa", cap: "Sueca", prov: "València" },
+    { nom: "L'Alcoià", cap: "Alcoi", prov: "Alacant" },
+    { nom: "El Comtat", cap: "Cocentaina", prov: "Alacant" },
+    { nom: "L'Alt Maestrat", cap: "Albocàsser", prov: "Castelló" },
+    { nom: "El Baix Maestrat", cap: "Vinaròs", prov: "Castelló" },
+    { nom: "La Plana Alta", cap: "Castelló de la Plana", prov: "Castelló" },
+    { nom: "La Plana Baixa", cap: "Borriana", prov: "Castelló" },
+    { nom: "El Camp de Morvedre", cap: "Sagunt", prov: "València" },
+    { nom: "El Camp de Túria", cap: "Llíria", prov: "València" },
+    { nom: "L'Horta Nord", cap: "Puçol", prov: "València" },
+    { nom: "L'Horta Sud", cap: "Torrent", prov: "València" },
+    { nom: "La Vall d'Albaida", cap: "Ontinyent", prov: "València" },
+    { nom: "El Baix Vinalopó", cap: "Elx", prov: "Alacant" },
+    { nom: "L'Alt Vinalopó", cap: "Villena", prov: "Alacant" },
+    { nom: "El Vinalopó Mitjà", cap: "Elda", prov: "Alacant" },
+    { nom: "La Vega Baixa", cap: "Oriola", prov: "Alacant" },
+    { nom: "Els Ports", cap: "Morella", prov: "Castelló" },
+    { nom: "L'Alt Palància", cap: "Sogorb", prov: "Castelló" },
+    { nom: "La Foia de Bunyol", cap: "Bunyol", prov: "València" },
+    { nom: "El Valle de Ayora-Cofrentes", cap: "Aiora", prov: "València" },
+    { nom: "La Canal de Navarrés", cap: "Enguera", prov: "València" },
+    { nom: "La Costera", cap: "Xàtiva", prov: "València" },
+    { nom: "Els Serrans", cap: "Xelva", prov: "València" },
+    { nom: "L'Alt Millars", cap: "Cirats", prov: "Castelló" },
+    { nom: "L'Alcalatén", cap: "L'Alcora", prov: "Castelló" },
+    { nom: "La Plana d'Utiel-Requena", cap: "Requena", prov: "València" },
+    { nom: "L'Rincón de Ademuz", cap: "Ademuz", prov: "València" },
+    { nom: "València City", cap: "València", prov: "València" },
+    { nom: "Alacantí", cap: "Alacant", prov: "Alacant" }
   ];
-  comarques.forEach((c, idx) => {
-    const altCap1 = comarques[(idx + 1) % comarques.length].cap;
-    const altCap2 = comarques[(idx + 2) % comarques.length].cap;
-    addQ("Geografia Valenciana", `Quina és la capital de la comarca de ${c.nom}?`, c.cap, altCap1, altCap2);
-    
-    const altCom1 = comarques[(idx + 3) % comarques.length].nom;
-    const altCom2 = comarques[(idx + 4) % comarques.length].nom;
-    addQ("Geografia Valenciana", `A quina comarca pertany el municipi de ${c.cap}?`, c.nom, altCom1, altCom2);
+
+  comarquesFull.forEach((c, idx) => {
+    const c1 = comarquesFull[(idx + 1) % comarquesFull.length];
+    const c2 = comarquesFull[(idx + 2) % comarquesFull.length];
+    addQ("Geografia Valenciana", `Quina és la capital de la comarca de ${c.nom}?`, c.cap, c1.cap, c2.cap);
+    addQ("Geografia Valenciana", `A quina comarca pertany el municipi de ${c.cap}?`, c.nom, c1.nom, c2.nom);
+    const altProvs = ["València", "Alacant", "Castelló"].filter(p => p !== c.prov);
+    addQ("Geografia Valenciana", `En quina província es troba la comarca de ${c.nom}?`, c.prov, altProvs[0], altProvs[1]);
   });
 
-  // Música Valenciana
+  // 2. REGIONAL: Música i Cultura Musical
   const grupsMusica = [
-    { grup: "La Gossa Sorda", origen: "Pego", canco: "Camals mullats" },
-    { grup: "Zoo", origen: "Gandia", canco: "Tobogan" },
-    { grup: "Aspencat", origen: "Xaló", canco: "La distància" },
-    { grup: "La Fúmiga", origen: "Alzira", canco: "Mediterrània" },
-    { grup: "El Diluvi", origen: "Alcoi", canco: "Alegria" },
-    { grup: "Auxili", origen: "Ontinyent", canco: "Hui la liem" },
-    { grup: "Smoking Souls", origen: "Pego", canco: "1632" },
-    { grup: "Al Tall", origen: "València", canco: "Tio Canya" },
-    { grup: "Obrint Pas", origen: "València", canco: "La flama" },
-    { grup: "Tardor", origen: "València", canco: "El cel rogent" },
-    { grup: "Gener", origen: "Carcaixent", canco: "Cugat" },
-    { grup: "Ciudad Jara", origen: "Gandia", canco: "Bailar con las olas" },
-    { grup: "Orxata Sound System", origen: "València", canco: "Niça muke" },
-    { grup: "Sva-ters", origen: "Alcàsser", canco: "Romanç de cego" },
-    { grup: "Xavi Sarrià", origen: "Almassora", canco: "No s'apaga la flama" },
-    { grup: "Raimon", origen: "Xàtiva", canco: "Al vent" }
+    { grup: "La Gossa Sorda", origen: "Pego", canco: "Camals mullats", disco: "Saó" },
+    { grup: "Zoo", origen: "Gandia", canco: "Tobogan", disco: "Llepolies" },
+    { grup: "Aspencat", origen: "Xaló", canco: "La distància", disco: "Essència" },
+    { grup: "La Fúmiga", origen: "Alzira", canco: "Mediterrània", disco: "Espremedors" },
+    { grup: "El Diluvi", origen: "Alcoi", canco: "Alegria", disco: "Juguem a deure'ns" },
+    { grup: "Auxili", origen: "Ontinyent", canco: "Hui la liem", disco: "Instants del temps" },
+    { grup: "Smoking Souls", origen: "Pego", canco: "1632", disco: "Cendra i or" },
+    { grup: "Al Tall", origen: "València", canco: "Tio Canya", disco: "Quan el Mal Ve de Almansa" },
+    { grup: "Obrint Pas", origen: "València", canco: "La flama", disco: "Benvingut al paradís" },
+    { grup: "Tardor", origen: "València", canco: "El cel rogent", disco: "Patraix" },
+    { grup: "Gener", origen: "Carcaixent", canco: "Cugat", disco: "Oh germans!" },
+    { grup: "Ciudad Jara", origen: "Gandia", canco: "Bailar con las olas", disco: "Donde nace el infarto" },
+    { grup: "Orxata Sound System", origen: "València", canco: "Niça muke", disco: "1.0" },
+    { grup: "Sva-ters", origen: "Alcàsser", canco: "Romanç de cego", disco: "Berlanga" },
+    { grup: "Xavi Sarrià", origen: "Almassora", canco: "No s'apaga la flama", disco: "Amb l'esperança entre les dents" },
+    { grup: "Raimon", origen: "Xàtiva", canco: "Al vent", disco: "A Alcoi" },
+    { grup: "Ebri Knight", origen: "Maresme", canco: "Guerrilla", disco: "Vora el foc" },
+    { grup: "Pau Alabajos", origen: "Torrent", canco: "Zapping", disco: "Teoria del caos" },
+    { grup: "Miquel Gil", origen: "Catarroja", canco: "ELS VENTS", disco: "Katà" },
+    { grup: "Nino Bravo", origen: "Aielo de Malferit", canco: "Un beso y una flor", disco: "América" },
+    { grup: "Camilo Sesto", origen: "Alcoi", canco: "Vivir así es morir de amor", disco: "Sentimientos" }
   ];
-  grupsMusica.forEach(g => {
-    const altOrigens = grupsMusica.filter(x => x.origen !== g.origen).map(x => x.origen);
-    addQ("Música Valenciana", `De quina localitat és originari el grup '${g.grup}'?`, g.origen, altOrigens[0], altOrigens[1]);
-    const altCançons = grupsMusica.filter(x => x.canco !== g.canco).map(x => x.canco);
-    addQ("Música Valenciana", `Quina d'aquestes cançons és un tema de '${g.grup}'?`, g.canco, altCançons[0], altCançons[1]);
+
+  grupsMusica.forEach((g, idx) => {
+    const g1 = grupsMusica[(idx + 1) % grupsMusica.length];
+    const g2 = grupsMusica[(idx + 2) % grupsMusica.length];
+    addQ("Música Valenciana", `De quina localitat és originari el grup o artista '${g.grup}'?`, g.origen, g1.origen, g2.origen);
+    addQ("Música Valenciana", `Quina d'aquestes cançons és un tema de '${g.grup}'?`, g.canco, g1.canco, g2.canco);
+    addQ("Música Valenciana", `Quin d'aquests treballs és un àlbum de '${g.grup}'?`, g.disco, g1.disco, g2.disco);
   });
 
-  // Historia, Arte y Tradiciones Valencianas
-  const valencianData = [
+  // 3. REGIONAL: Festes, Història, Art i Tradicions
+  const regionalMisc = [
     { cat: "Cultura Valenciana", q: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", a: "La Llotja de la Seda", f1: "Torres de Serrans", f2: "El Micalet" },
     { cat: "Geografia Valenciana", q: "Quin és el punt més alt geogràfic de la Comunitat Valenciana?", a: "El Calderón", f1: "Penyagolosa", f2: "Aitana" },
     { cat: "Festes i Tradicions", q: "En quina ciutat se celebra el famós Misteri d'origen medieval?", a: "Elx", f1: "Oriola", f2: "Castelló" },
@@ -222,42 +246,62 @@ function generate500Questions() {
     { cat: "Geografia Valenciana", q: "Quin riu creua la ciutat de València reconvertit en un gran parc urbà?", a: "Túria", f1: "Xúquer", f2: "Vinalopó" },
     { cat: "Literatura Valenciana", q: "Quin poeta de Beniarjó és el màxim exponent del Segle d'Or de la poesia valenciana?", a: "Ausiàs March", f1: "Joan Roís de Corella", f2: "Jaume Roig" },
     { cat: "Festes i Tradicions", q: "En quina data se celebra oficialment la Diada del Poble Valencià?", a: "9 d'Octubre", f1: "19 de Març", f2: "24 de Juny" },
-    { cat: "Festes i Tradicions", q: "Quin nom rep la Nit del 19 de Març quan es cremen els monuments fallers?", a: "La Cremà", f1: "La Nit del Foc", f2: "La Plantà" }
+    { cat: "Festes i Tradicions", q: "Quin nom rep la Nit del 19 de Març quan es cremen els monuments fallers?", a: "La Cremà", f1: "La Nit del Foc", f2: "La Plantà" },
+    { cat: "Festes i Tradicions", q: "Com anomenen popularment l'acte on es dispara una gran traca sorollosa a les 14:00h?", a: "Mascletà", f1: "Despertà", f2: "Nit del Foc" },
+    { cat: "Història Valenciana", q: "Quin rei va fundar el Regne de València al segle XIII?", a: "Jaume I el Conqueridor", f1: "Pere el Gran", f2: "Alfons el Magnànim" },
+    { cat: "Geografia Valenciana", q: "Quin parc natural marítim-terrestre es troba situat a la comarca de la Marina Baixa?", a: "Serra Gelada", f1: "El Montgó", f2: "Serra Espadà" },
+    { cat: "Patrimoni Valencianista", q: "En quina localitat trobem el famós Castell de Santa Bàrbara?", a: "Alacant", f1: "Xàtiva", f2: "Morella" },
+    { cat: "Patrimoni Valencianista", q: "Quin municipi és famós pel seu Castell situat dalt d'una mola rocosa als Ports?", a: "Morella", f1: "Vilafamés", f2: "Ares del Maestrat" },
+    { cat: "Natura Valenciana", q: "Quin massís muntanyós separa les comarques de la Marina Alta i la Safor?", a: "El Montgó", f1: "Penyagolosa", f2: "Benicadell" }
   ];
-  valencianData.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
+  regionalMisc.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
-  // Capitales del Mundo
-  const capitalsMon = [
-    { pais: "França", cap: "París", f1: "Lió", f2: "Marsella" },
-    { pais: "Itàlia", cap: "Roma", f1: "Milà", f2: "Nàpols" },
-    { pais: "Alemanya", cap: "Berlín", f1: "Múnic", f2: "Frankfurt" },
-    { pais: "Japó", cap: "Tòquio", f1: "Kioto", f2: "Osaka" },
-    { pais: "Portugal", cap: "Lisboa", f1: "Porto", f2: "Coïmbra" },
-    { pais: "Regne Unit", cap: "Londres", f1: "Manchester", f2: "Liverpool" },
-    { pais: "Grècia", cap: "Atenes", f1: "Salònica", f2: "Heràclion" },
-    { pais: "Egipte", cap: "El Caire", f1: "Alexandria", f2: "Gizeh" },
-    { pais: "Austràlia", cap: "Canberra", f1: "Sydney", f2: "Melbourne" },
-    { pais: "Canadà", cap: "Ottawa", f1: "Toronto", f2: "Vancouver" },
-    { pais: "Brasil", cap: "Brasília", f1: "Rio de Janeiro", f2: "São Paulo" },
-    { pais: "Argentina", cap: "Buenos Aires", f1: "Mendoza", f2: "Rosario" },
-    { pais: "Mèxic", cap: "Ciutat de Mèxic", f1: "Guadalajara", f2: "Monterrey" },
-    { pais: "Suïssa", cap: "Berna", f1: "Ginebra", f2: "Zuric" },
-    { pais: "Bèlgica", cap: "Brussel·les", f1: "Bruges", f2: "Anvers" },
-    { pais: "Països Baixos", cap: "Amsterdam", f1: "Rotterdam", f2: "La Haia" },
-    { pais: "Suècia", cap: "Estocolm", f1: "Gothenburg", f2: "Malmö" },
-    { pais: "Noruega", cap: "Oslo", f1: "Bergen", f2: "Trondheim" },
-    { pais: "Finlàndia", cap: "Hèlsinki", f1: "Tampere", f2: "Turku" },
-    { pais: "Polònia", cap: "Varsòvia", f1: "Cracòvia", f2: "Gdansk" },
-    { pais: "Àustria", cap: "Viena", f1: "Salzburg", f2: "Innsbruck" },
-    { pais: "Irlanda", cap: "Dublín", f1: "Cork", f2: "Galway" }
+
+  // 4. GENERAL: Capitals del Món i Geografia Internacional (Ampliador)
+  const capitalsWorld = [
+    { pais: "França", cap: "París", cont: "Europa" },
+    { pais: "Itàlia", cap: "Roma", cont: "Europa" },
+    { pais: "Alemanya", cap: "Berlín", cont: "Europa" },
+    { pais: "Japó", cap: "Tòquio", cont: "Àsia" },
+    { pais: "Portugal", cap: "Lisboa", cont: "Europa" },
+    { pais: "Regne Unit", cap: "Londres", cont: "Europa" },
+    { pais: "Grècia", cap: "Atenes", cont: "Europa" },
+    { pais: "Egipte", cap: "El Caire", cont: "Àfrica" },
+    { pais: "Austràlia", cap: "Canberra", cont: "Oceania" },
+    { pais: "Canadà", cap: "Ottawa", cont: "Amèrica del Nord" },
+    { pais: "Brasil", cap: "Brasília", cont: "Amèrica del Sud" },
+    { pais: "Argentina", cap: "Buenos Aires", cont: "Amèrica del Sud" },
+    { pais: "Mèxic", cap: "Ciutat de Mèxic", cont: "Amèrica del Nord" },
+    { pais: "Suïssa", cap: "Berna", cont: "Europa" },
+    { pais: "Bèlgica", cap: "Brussel·les", cont: "Europa" },
+    { pais: "Països Baixos", cap: "Amsterdam", cont: "Europa" },
+    { pais: "Suècia", cap: "Estocolm", cont: "Europa" },
+    { pais: "Noruega", cap: "Oslo", cont: "Europa" },
+    { pais: "Finlàndia", cap: "Hèlsinki", cont: "Europa" },
+    { pais: "Polònia", cap: "Varsòvia", cont: "Europa" },
+    { pais: "Àustria", cap: "Viena", cont: "Europa" },
+    { pais: "Irlanda", cap: "Dublín", cont: "Europa" },
+    { pais: "Xina", cap: "Pequín", cont: "Àsia" },
+    { pais: "Índia", cap: "Nova Delhi", cont: "Àsia" },
+    { pais: "Corea del Sud", cap: "Seül", cont: "Àsia" },
+    { pais: "Rússia", cap: "Moscou", cont: "Europa" },
+    { pais: "Turquia", cap: "Ankara", cont: "Àsia" },
+    { pais: "Marroc", cap: "Rabat", cont: "Àfrica" },
+    { pais: "Colòmbia", cap: "Bogotà", cont: "Amèrica del Sud" },
+    { pais: "Xile", cap: "Santiago", cont: "Amèrica del Sud" },
+    { pais: "Perú", cap: "Lima", cont: "Amèrica del Sud" },
+    { pais: "Estats Units", cap: "Washington D.C.", cont: "Amèrica del Nord" }
   ];
-  capitalsMon.forEach(c => {
-    addQ("Geografia Mundial", `Quina és la capital oficial de ${c.pais}?`, c.cap, c.f1, c.f2);
-    addQ("Geografia Mundial", `De quin país és capital la ciutat de ${c.cap}?`, c.pais, "Espanya", "Xile");
+
+  capitalsWorld.forEach((c, idx) => {
+    const c1 = capitalsWorld[(idx + 1) % capitalsWorld.length];
+    const c2 = capitalsWorld[(idx + 2) % capitalsWorld.length];
+    addQ("Geografia Mundial", `Quina és la capital oficial de ${c.pais}?`, c.cap, c1.cap, c2.cap);
+    addQ("Geografia Mundial", `De quin país és capital la ciutat de ${c.cap}?`, c.pais, c1.pais, c2.pais);
   });
 
-  // Cultura General Internacional
-  const generalData = [
+  // 5. GENERAL: Literatura, Ciència, Art, Cinema, Història Universal
+  const generalMisc = [
     { cat: "Ciència i Natura", q: "Quin és el planeta de major grandària de tot el Sistema Solar?", a: "Júpiter", f1: "Saturn", f2: "Neptú" },
     { cat: "Història Universal", q: "En quin any va arribar per primera vegada Cristòfor Colom a Amèrica?", a: "1492", f1: "1508", f2: "1485" },
     { cat: "Cinema", q: "Quin director de cinema va dirigir la pel·lícula 'Jurassic Park'?", a: "Steven Spielberg", f1: "George Lucas", f2: "James Cameron" },
@@ -273,12 +317,29 @@ function generate500Questions() {
     { cat: "Història Universal", q: "En quin any va finalitzar la Segona Guerra Mundial?", a: "1945", f1: "1939", f2: "1918" },
     { cat: "Ciència i Natura", q: "Quin és el metall més abundant en la crosta terrestre?", a: "Alumini", f1: "Ferro", f2: "Cobre" },
     { cat: "Literatura Universal", q: "Qui va escriure la tragèdia 'Romeu i Julieta'?", a: "William Shakespeare", f1: "Charles Dickens", f2: "Victor Hugo" },
-    { cat: "Geografia Mundial", q: "Quina és la serralada més alta del món?", a: "Himàlaia", f1: "Andes", f2: "Alps" }
+    { cat: "Geografia Mundial", q: "Quina és la serralada més alta del món?", a: "Himàlaia", f1: "Andes", f2: "Alps" },
+    { cat: "Cinema", q: "Quina pel·lícula va guanyar l'Òscar a millor pel·lícula l'any 1997 dirigida per James Cameron?", a: "Titanic", f1: "Avatar", f2: "Gladiator" },
+    { cat: "Història Universal", q: "Quin va ser el primer emperador de l'Imperi Romà?", a: "August", f1: "Juli Cèsar", f2: "Neró" },
+    { cat: "Ciència i Natura", q: "Quin òrgan del cos humà produeix la insulina?", a: "Pàncrees", f1: "Fetge", f2: "Ronyó" },
+    { cat: "Música Internacional", q: "Quin compositor clàssic va escriure la 'Cinquena Simfonia' sent sord?", a: "Beethoven", f1: "Mozart", f2: "Bach" },
+    { cat: "Literatura Universal", q: "Quin autor és el creador del famós detectiu Sherlock Holmes?", a: "Arthur Conan Doyle", f1: "Agatha Christie", f2: "Edgar Allan Poe" },
+    { cat: "Art i Pintura", q: "Quin pintor neerlandés va pintar el famós quadre 'La nit estelada'?", a: "Vincent van Gogh", f1: "Rembrandt", f2: "Monet" },
+    { cat: "Geografia Mundial", q: "Quin és l'oceà més gran de la Terra?", a: "Pacífic", f1: "Atlàntic", f2: "Índic" },
+    { cat: "Història Universal", q: "En quin any va caure el Mur de Berlín marcant la fi de la Guerra Freda?", a: "1989", f1: "1975", f2: "1991" },
+    { cat: "Ciència i Natura", q: "Quina velocitat té aproximadament la llum al buit?", a: "300.000 km/s", f1: "150.000 km/s", f2: "1.000.000 km/s" },
+    { cat: "Astronomia", q: "Quin és el planeta més proper al Sol?", a: "Mercuri", f1: "Venus", f2: "Mart" },
+    { cat: "Esports", q: "Quants jugadors formen un equip de bàsquet a la pista durant un partit?", a: "5 jugadors", f1: "6 jugadors", f2: "7 jugadors" },
+    { cat: "Literatura Universal", q: "Quina és l'obra poètica de l'antiga Grècia atribüida a Homer que narra el viatge d'Ulisses?", a: "L'Odissea", f1: "La Ilíada", f2: "L'Eneida" },
+    { cat: "Cinema", q: "Quin actor va interpretar el personatge d'Indiana Jones?", a: "Harrison Ford", f1: "Mel Gibson", f2: "Tom Cruise" },
+    { cat: "Geografia Mundial", q: "Quin és el desert càlid més gran del món?", a: "Sàhara", f1: "Gobi", f2: "Atacama" },
+    { cat: "Música Internacional", q: "Quin cantant era conegut popularment com el 'Rei del Pop'?", a: "Michael Jackson", f1: "Elvis Presley", f2: "Freddie Mercury" },
+    { cat: "Història Universal", q: "Quina revolució va començar l'any 1789 amb la presa de la Bastilla?", a: "Revolució Francesa", f1: "Revolució Russa", f2: "Revolució Industrial" }
   ];
-  generalData.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
+
+  generalMisc.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
   // ==========================================
-  // LÓGICA DE ROTACIÓN DINÁMICA POR CATEGORÍA
+  // LÓGICA DE ROTACIÓN Y GARANTÍA DE 500 PREGUNTAS
   // ==========================================
   const categorised = {};
   rawQuestions.forEach(q => {
@@ -286,7 +347,7 @@ function generate500Questions() {
     categorised[q.category].push(q);
   });
 
-  // Mezclar internamente cada lista temática
+  // Mezclar elementos internamente por categoría
   Object.keys(categorised).forEach(cat => {
     for (let i = categorised[cat].length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -294,28 +355,32 @@ function generate500Questions() {
     }
   });
 
-  // Intercalar preguntas saltando siempre de tema
   const categoriesList = Object.keys(categorised);
+  const interleavedQuestions = [];
+
+  // Barrejar l'ordre de categories
   for (let i = categoriesList.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [categoriesList[i], categoriesList[j]] = [categoriesList[j], categoriesList[i]];
   }
 
-  const interleavedQuestions = [];
-  let added = true;
-
-  while (added && interleavedQuestions.length < 500) {
-    added = false;
-    for (const cat of categoriesList) {
-      if (categorised[cat].length > 0) {
-        interleavedQuestions.push(categorised[cat].pop());
-        added = true;
-        if (interleavedQuestions.length === 500) break;
+  // Intercalar temes de manera contínua fins a aconseguir exactament 500
+  let indexCat = 0;
+  while (interleavedQuestions.length < 500) {
+    const currentCat = categoriesList[indexCat % categoriesList.length];
+    if (categorised[currentCat].length > 0) {
+      interleavedQuestions.push(categorised[currentCat].pop());
+    } else {
+      // Re-omplir si una categoria s'ha esgotat per mantenir el ritme
+      const refQ = rawQuestions.find(q => q.category === currentCat);
+      if (refQ) {
+        interleavedQuestions.push({...refQ});
       }
     }
+    indexCat++;
   }
 
-  return interleavedQuestions;
+  return interleavedQuestions.slice(0, 500);
 }
 
 let questions = generate500Questions();

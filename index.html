@@ -49,21 +49,42 @@ body {
   justify-content: space-between;
   position: relative;
 }
-.top-section { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
-.brand-logo { display: block; max-height: 100px; width: auto; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 180, 216, 0.3)); }
-.header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px 18px; border-radius: 14px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+.top-section { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.brand-logo { display: block; max-height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 180, 216, 0.3)); }
+.header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); padding: 8px 16px; border-radius: 14px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
 .score-board { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); text-shadow: 0 0 10px var(--accent-yellow-glow); }
 .progress { font-weight: 600; font-size: 0.85rem; color: var(--text-muted); }
 .category-badge { display: inline-block; align-self: center; background: rgba(0, 180, 216, 0.2); color: #38bdf8; border: 1.5px solid #38bdf8; padding: 6px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; box-shadow: 0 0 15px var(--accent-blue-glow), inset 0 0 8px rgba(0, 180, 216, 0.3); text-shadow: 0 0 8px var(--accent-blue-glow); text-align: center; }
-.question-box { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px 8px; }
-.question-text { font-size: 1.15rem; font-weight: 600; line-height: 1.35; color: var(--text-light); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-.options-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-.option-btn { background: var(--btn-bg); color: var(--text-light); border: 1px solid rgba(0, 180, 216, 0.35); border-radius: 14px; padding: 12px 16px; font-size: 0.95rem; text-align: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-weight: 600; display: flex; align-items: center; min-height: 50px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 180, 216, 0.15); backdrop-filter: blur(6px); }
+.question-box { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px 6px; }
+.question-text { font-size: 1.1rem; font-weight: 600; line-height: 1.35; color: var(--text-light); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+/* Boto d'avançar entre pregunta i opcions */
+.next-micro-btn {
+  align-self: center;
+  margin: 6px 0 10px 0;
+  background: var(--accent-yellow);
+  color: #000;
+  border: 1px solid #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 18px var(--accent-yellow-glow), 0 0 8px #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: pulse 1.5s infinite;
+  z-index: 5;
+}
+@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-yellow-glow); } 50% { transform: scale(1.05); box-shadow: 0 0 25px var(--accent-yellow-glow), 0 0 12px #fff; } 100% { transform: scale(1); box-shadow: 0 0 15px var(--accent-yellow-glow); } }
+
+.options-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.option-btn { background: var(--btn-bg); color: var(--text-light); border: 1px solid rgba(0, 180, 216, 0.35); border-radius: 14px; padding: 12px 16px; font-size: 0.95rem; text-align: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-weight: 600; display: flex; align-items: center; min-height: 48px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 180, 216, 0.15); backdrop-filter: blur(6px); }
 .option-btn:active { transform: scale(0.98); }
 .option-btn.correct { background-color: var(--correct) !important; border-color: var(--correct) !important; color: #000 !important; font-weight: 800; box-shadow: 0 0 22px var(--correct-glow) !important; }
 .option-btn.incorrect { background-color: var(--incorrect) !important; border-color: var(--incorrect) !important; color: #fff !important; box-shadow: 0 0 22px var(--incorrect-glow) !important; }
-.next-micro-btn { position: absolute; bottom: 32px; right: 18px; background: var(--accent-yellow); color: #000; border: 1px solid #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; cursor: pointer; box-shadow: 0 0 18px var(--accent-yellow-glow), 0 0 8px #fff; display: flex; align-items: center; gap: 4px; animation: pulse 1.5s infinite; z-index: 10; }
-@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-yellow-glow); } 50% { transform: scale(1.08); box-shadow: 0 0 25px var(--accent-yellow-glow), 0 0 12px #fff; } 100% { transform: scale(1); box-shadow: 0 0 15px var(--accent-yellow-glow); } }
+
 .app-footer { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; padding-top: 4px; }
 .app-footer a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
 .app-footer a:hover { text-decoration: underline; }
@@ -75,7 +96,7 @@ body {
 <body>
 
 <div class="quiz-container">
-  <div id="game-screen" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between; position: relative;">
+  <div id="game-screen" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
     <div class="top-section">
       <img class="brand-logo" src="https://static.apuntmedia.es/clip/da57fb20-aa5d-4c8c-92e0-cfb8d38c7949_source-aspect-ratio_360w_0.webp" alt="Atrapa'm si pots">
       <div class="header">
@@ -89,9 +110,10 @@ body {
       <h2 class="question-text" id="question">Carregant...</h2>
     </div>
 
-    <div class="options-grid" id="options"></div>
-
+    <!-- Botó intercalat entre la pregunta i les opcions -->
     <button id="next-btn" class="next-micro-btn hidden" onclick="nextQuestion()">Següent ➔</button>
+
+    <div class="options-grid" id="options"></div>
 
     <footer class="app-footer">
       Desarrollado por <a href="https://www.instagram.com/fran_giga/" target="_blank" rel="noopener noreferrer">fran_giga</a>
@@ -110,13 +132,13 @@ body {
 
 <script>
 function generate500Questions() {
-  const uniqueQuestions = [];
+  const rawQuestions = [];
   const usedQuestionsSet = new Set();
 
   function addQ(cat, qText, correctOpt, false1, false2) {
     if (!usedQuestionsSet.has(qText)) {
       usedQuestionsSet.add(qText);
-      uniqueQuestions.push({
+      rawQuestions.push({
         category: cat,
         question: qText,
         options: [correctOpt, false1, false2],
@@ -126,10 +148,10 @@ function generate500Questions() {
   }
 
   // ==========================================
-  // BLOQUE REGIONAL - COMUNITAT VALENCIANA (50%)
+  // BANCO DE PREGUNTAS (REGIONAL + GENERAL)
   // ==========================================
 
-  // 1. Comarcas y Capitales
+  // Comarcas y Capitales
   const comarques = [
     { nom: "La Marina Alta", cap: "Dénia" }, { nom: "La Marina Baixa", cap: "La Vila Joiosa" },
     { nom: "La Safor", cap: "Gandia" }, { nom: "La Ribera Alta", cap: "Alzira" },
@@ -156,24 +178,24 @@ function generate500Questions() {
     addQ("Geografia Valenciana", `A quina comarca pertany el municipi de ${c.cap}?`, c.nom, altCom1, altCom2);
   });
 
-  // 2. Música Valenciana
+  // Música Valenciana
   const grupsMusica = [
-    { grup: "La Gossa Sorda", origen: "Pego", canco: "Camals mullats", estil: "Ska / Rock" },
-    { grup: "Zoo", origen: "Gandia", canco: "Tobogan", estil: "Rap / Electrònica" },
-    { grup: "Aspencat", origen: "Xaló", canco: "La distància", estil: "Reggae / Ska" },
-    { grup: "La Fúmiga", origen: "Alzira", canco: "Mediterrània", estil: "Festiva / Brass band" },
-    { grup: "El Diluvi", origen: "Alcoi", canco: "Alegria", estil: "Folk modern" },
-    { grup: "Auxili", origen: "Ontinyent", canco: "Hui la liem", estil: "Reggae" },
-    { grup: "Smoking Souls", origen: "Pego", canco: "1632", estil: "Rock" },
-    { grup: "Al Tall", origen: "València", canco: "Tio Canya", estil: "Música tradicional" },
-    { grup: "Obrint Pas", origen: "València", canco: "La flama", estil: "Ska / Rock" },
-    { grup: "Tardor", origen: "València", canco: "El cel rogent", estil: "Indie Rock" },
-    { grup: "Gener", origen: "Carcaixent", canco: "Cugat", estil: "Pop Rock" },
-    { grup: "Ciudad Jara", origen: "Gandia", canco: "Bailar con las olas", estil: "Rock d'autor" },
-    { grup: "Orxata Sound System", origen: "València", canco: "Niça muke", estil: "Electrònica / Cumbia" },
-    { grup: "Sva-ters", origen: "Alcàsser", canco: "Romanç de cego", estil: "Ska" },
-    { grup: "Xavi Sarrià", origen: "Almassora", canco: "No s'apaga la flama", estil: "Rock / Folk" },
-    { grup: "Raimon", origen: "Xàtiva", canco: "Al vent", estil: "Nova Cançó" }
+    { grup: "La Gossa Sorda", origen: "Pego", canco: "Camals mullats" },
+    { grup: "Zoo", origen: "Gandia", canco: "Tobogan" },
+    { grup: "Aspencat", origen: "Xaló", canco: "La distància" },
+    { grup: "La Fúmiga", origen: "Alzira", canco: "Mediterrània" },
+    { grup: "El Diluvi", origen: "Alcoi", canco: "Alegria" },
+    { grup: "Auxili", origen: "Ontinyent", canco: "Hui la liem" },
+    { grup: "Smoking Souls", origen: "Pego", canco: "1632" },
+    { grup: "Al Tall", origen: "València", canco: "Tio Canya" },
+    { grup: "Obrint Pas", origen: "València", canco: "La flama" },
+    { grup: "Tardor", origen: "València", canco: "El cel rogent" },
+    { grup: "Gener", origen: "Carcaixent", canco: "Cugat" },
+    { grup: "Ciudad Jara", origen: "Gandia", canco: "Bailar con las olas" },
+    { grup: "Orxata Sound System", origen: "València", canco: "Niça muke" },
+    { grup: "Sva-ters", origen: "Alcàsser", canco: "Romanç de cego" },
+    { grup: "Xavi Sarrià", origen: "Almassora", canco: "No s'apaga la flama" },
+    { grup: "Raimon", origen: "Xàtiva", canco: "Al vent" }
   ];
   grupsMusica.forEach(g => {
     const altOrigens = grupsMusica.filter(x => x.origen !== g.origen).map(x => x.origen);
@@ -182,7 +204,7 @@ function generate500Questions() {
     addQ("Música Valenciana", `Quina d'aquestes cançons és un tema de '${g.grup}'?`, g.canco, altCançons[0], altCançons[1]);
   });
 
-  // 3. Historia, Arte, Tradiciones y Geografía Valenciana
+  // Historia, Arte y Tradiciones Valencianas
   const valencianData = [
     { cat: "Cultura Valenciana", q: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", a: "La Llotja de la Seda", f1: "Torres de Serrans", f2: "El Micalet" },
     { cat: "Geografia Valenciana", q: "Quin és el punt més alt geogràfic de la Comunitat Valenciana?", a: "El Calderón", f1: "Penyagolosa", f2: "Aitana" },
@@ -196,21 +218,13 @@ function generate500Questions() {
     { cat: "Música Clàssica", q: "Qui va composar el 'Concierto de Aranjuez', sent natural de Sagunt?", a: "Joaquín Rodrigo", f1: "Vicent Martín i Soler", f2: "Ruperto Chapí" },
     { cat: "Natura Valenciana", q: "Quin d'aquestes paratges és una gran llaguna d'aigua dolça a València?", a: "L'Albufera", f1: "El Prat de Cabanes", f2: "Salinas de Torrevieja" },
     { cat: "Història Valenciana", q: "Quina va ser la data de la Batalla d'Almansa i abolició dels Furs?", a: "1707", f1: "1808", f2: "1936" },
-    { cat: "Festes i Tradicions", q: "Quin personatge tradicional de la Fira de Xàtiva rep el nom popular de 'El Tio Canya'?", a: "La figura popular de la cançó d'Al Tall", f1: "Un personatge del Corpus", f2: "Un dimoni de Sant Antoni" },
-    { cat: "Patrimoni Valencianista", q: "En quina comarca es troba el Castell de Xàtiva?", a: "La Costera", f1: "La Vall d'Albaida", f2: "La Ribera Alta" },
     { cat: "Geografia Valenciana", q: "Quin riu desemboca principalment a la ciutat de Cullera?", a: "Xúquer", f1: "Túria", f2: "Segura" },
     { cat: "Geografia Valenciana", q: "Quin riu creua la ciutat de València reconvertit en un gran parc urbà?", a: "Túria", f1: "Xúquer", f2: "Vinalopó" },
     { cat: "Literatura Valenciana", q: "Quin poeta de Beniarjó és el màxim exponent del Segle d'Or de la poesia valenciana?", a: "Ausiàs March", f1: "Joan Roís de Corella", f2: "Jaume Roig" },
     { cat: "Festes i Tradicions", q: "En quina data se celebra oficialment la Diada del Poble Valencià?", a: "9 d'Octubre", f1: "19 de Març", f2: "24 de Juny" },
-    { cat: "Festes i Tradicions", q: "Quin nom rep la Nit del 19 de Març quan es cremen els monuments fallers?", a: "La Cremà", f1: "La Nit del Foc", f2: "La Plantà" },
-    { cat: "Gastronomia Valenciana", q: "Quin plat típic de l'Alcoià està fet principalment a base de galeta de pa picat i carn de caça?", a: "Olleta d'Alcoi", f1: "Pericana", f2: "Gaspatxo alcoià" },
-    { cat: "Gastronomia Valenciana", q: "De quina zona de la Comunitat és originària la coneguda 'Pericana'?", a: "L'Alcoià i El Comtat", f1: "La Vega Baixa", f2: "Els Ports" }
+    { cat: "Festes i Tradicions", q: "Quin nom rep la Nit del 19 de Març quan es cremen els monuments fallers?", a: "La Cremà", f1: "La Nit del Foc", f2: "La Plantà" }
   ];
   valencianData.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
-
-  // ==========================================
-  // BLOQUE CULTURA GENERAL (50%)
-  // ==========================================
 
   // Capitales del Mundo
   const capitalsMon = [
@@ -242,7 +256,7 @@ function generate500Questions() {
     addQ("Geografia Mundial", `De quin país és capital la ciutat de ${c.cap}?`, c.pais, "Espanya", "Xile");
   });
 
-  // Arte, Ciencia, Historia, Cine y Literatura General
+  // Cultura General Internacional
   const generalData = [
     { cat: "Ciència i Natura", q: "Quin és el planeta de major grandària de tot el Sistema Solar?", a: "Júpiter", f1: "Saturn", f2: "Neptú" },
     { cat: "Història Universal", q: "En quin any va arribar per primera vegada Cristòfor Colom a Amèrica?", a: "1492", f1: "1508", f2: "1485" },
@@ -263,14 +277,45 @@ function generate500Questions() {
   ];
   generalData.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
-  // Mezclar aleatoriamente las preguntas
-  for (let i = uniqueQuestions.length - 1; i > 0; i--) {
+  // ==========================================
+  // LÓGICA DE ROTACIÓN DINÁMICA POR CATEGORÍA
+  // ==========================================
+  const categorised = {};
+  rawQuestions.forEach(q => {
+    if (!categorised[q.category]) categorised[q.category] = [];
+    categorised[q.category].push(q);
+  });
+
+  // Mezclar internamente cada lista temática
+  Object.keys(categorised).forEach(cat => {
+    for (let i = categorised[cat].length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [categorised[cat][i], categorised[cat][j]] = [categorised[cat][j], categorised[cat][i]];
+    }
+  });
+
+  // Intercalar preguntas saltando siempre de tema
+  const categoriesList = Object.keys(categorised);
+  for (let i = categoriesList.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [uniqueQuestions[i], uniqueQuestions[j]] = [uniqueQuestions[j], uniqueQuestions[i]];
+    [categoriesList[i], categoriesList[j]] = [categoriesList[j], categoriesList[i]];
   }
 
-  // Devolver exactamente un tope de 500 preguntas
-  return uniqueQuestions.slice(0, 500);
+  const interleavedQuestions = [];
+  let added = true;
+
+  while (added && interleavedQuestions.length < 500) {
+    added = false;
+    for (const cat of categoriesList) {
+      if (categorised[cat].length > 0) {
+        interleavedQuestions.push(categorised[cat].pop());
+        added = true;
+        if (interleavedQuestions.length === 500) break;
+      }
+    }
+  }
+
+  return interleavedQuestions;
 }
 
 let questions = generate500Questions();

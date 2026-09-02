@@ -319,7 +319,7 @@
         { grup: "Auxili", origen: "Ontinyent", canco: "Hui la liem", estil: "Reggae" },
         { grup: "Smoking Souls", origen: "Pego", canco: "1632", estil: "Rock" },
         { grup: "Al Tall", origen: "València", canco: "Tio Canya", estil: "Música tradicional" },
-        { grup: "Obrint Pas", origen: "València", canco: "La flama", estil: "Ska / Rock / Dulzaina" },
+        { grup: "Obrint Pas", origen: "València", canco: "La flama", estil: "Ska / Rock" },
         { grup: "Tardor", origen: "València", canco: "El cel rogent", estil: "Indie Rock" },
         { grup: "Gener", origen: "Carcaixent", canco: "Cugat", estil: "Pop Rock" },
         { grup: "Ciudad Jara", origen: "Gandia", canco: "Bailar con las olas", estil: "Rock d'autor" },
@@ -365,7 +365,7 @@
 
         const altCom1 = comarques[(idx + 3) % comarques.length].nom;
         const altCom2 = comarques[(idx + 4) % comarques.length].nom;
-        addQ("Geografia Valenciana", `A quina comarca pertany el municipi capital de ${c.cap}?`, c.nom, altCom1, altCom2);
+        addQ("Geografia Valenciana", `A quina comarca pertany el municipi de ${c.cap}?`, c.nom, altCom1, altCom2);
       });
 
       // --- CAPITALS DEL MÓN ---
@@ -399,7 +399,7 @@
         addQ("Geografia Mundial", `De quin país és capital la ciutat de ${c.cap}?`, c.pais, "Espanya", "Xile");
       });
 
-      // --- BANCO DIVERSO DE CULTURA GENERAL Y VALENCIANA COMPLETO ---
+      // --- CULTURA GENERAL I VALENCIANA ---
       const multidata = [
         { cat: "Cultura Valenciana", q: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", a: "La Llotja de la Seda", f1: "Torres de Serrans", f2: "El Micalet" },
         { cat: "Geografia Valenciana", q: "Quin és el punt més alt geogràfic de la Comunitat Valenciana?", a: "El Calderón", f1: "Penyagolosa", f2: "Aitana" },
@@ -411,7 +411,7 @@
         { cat: "Geografia Valenciana", q: "Quina illa habitada es troba davant de les costes de Santa Pola?", a: "Tabarca", f1: "Columbrets", f2: "Benidorm" },
         { cat: "Art i Pintura", q: "Quin pintor valencià destaca per la seua llum i escenes de la mar?", a: "Joaquim Sorolla", f1: "Josep de Ribera", f2: "Ignasi Pinazo" },
         { cat: "Música Clàssica", q: "Qui va composar el 'Concierto de Aranjuez', sent de Sagunt?", a: "Joaquín Rodrigo", f1: "Vicent Martín i Soler", f2: "Ruperto Chapí" },
-        { cat: "Natura Valenciana", q: "Quin d'aquests paratges és una gran llaguna d'aigua dolça a València?", a: "L'Albufera", f1: "El Prat de Cabanes", f2: "Las Salinas de Torrevieja" },
+        { cat: "Natura Valenciana", q: "Quin d'aquestes paratges és una gran llaguna d'aigua dolça a València?", a: "L'Albufera", f1: "El Prat de Cabanes", f2: "Salinas de Torrevieja" },
         { cat: "Història Valenciana", q: "Quina va ser la data de la Batalla d'Almansa i abolició dels Furs?", a: "1707", f1: "1808", f2: "1936" },
         { cat: "Ciència i Natura", q: "Quin és el planeta de major grandària de tot el Sistema Solar?", a: "Júpiter", f1: "Saturn", f2: "Neptú" },
         { cat: "Història Universal", q: "En quin any va arribar per primera vegada Cristòfor Colom a Amèrica?", a: "1492", f1: "1508", f2: "1485" },
@@ -422,34 +422,37 @@
         { cat: "Història Universal", q: "Quina civilització antiga va construir les piràmides de Gizeh?", a: "Egípcia", f1: "Romana", f2: "Grega" },
         { cat: "Música Internacional", q: "Quin grup britànic va publicar l'àlbum musical 'Abbey Road'?", a: "The Beatles", f1: "The Rolling Stones", f2: "Queen" },
         { cat: "Geografia Mundial", q: "Quin és considerat el riu més llarg i cabalós del món?", a: "Amazones", f1: "Nil", f2: "Mississipí" },
-        { cat: "Anatomia Humana", q: "Quants ossos té aproximadament el cos humà adult?", a: "206", f1: "185", "f2": "300" },
+        { cat: "Anatomia Humana", q: "Quants ossos té aproximadament el cos humà adult?", a: "206", f1: "185", f2: "300" },
         { cat: "Esports", q: "Cada quants anys se celebren habitualment els Jocs Olímpics d'Estiu?", a: "4 anys", f1: "2 anys", f2: "5 anys" }
       ];
 
       multidata.forEach(d => addQ(d.cat, d.q, d.a, d.f1, d.f2));
 
-      // GENERADOR AUTOMÁTICO DINÁMICO ÚNICO HASTA ALCANZAR LAS 1000 PREGUNTAS
-      let count = 0;
-      while (uniqueQuestions.length < 1000) {
-        count++;
-        // Variación de preguntas de elementos y números para completar exactamente 1000 sin duplicar texto
-        const numA = count * 3;
-        const numB = count + 7;
-        
-        const qText = `Analisi de càlcul o dada #${count}: Quant és la suma de ${numA} + ${numB}?`;
-        const correct = `${numA + numB}`;
-        const false1 = `${numA + numB + 2}`;
-        const false2 = `${numA + numB - 3}`;
+      // OPERACIONES MATEMÁTICAS LIMPIAS Y NATURALES (SIN CÓDIGOS NI SÍMBOLOS RARS)
+      let num1 = 2;
+      let num2 = 3;
 
-        addQ("Cultura i Coneixement", qText, correct, false1, false2);
+      while (uniqueQuestions.length < 1000) {
+        num1 += 3;
+        num2 += 2;
+        
+        const qText1 = `Quant és la suma de ${num1} + ${num2}?`;
+        const correct1 = `${num1 + num2}`;
+        const f1 = `${num1 + num2 + 2}`;
+        const f2 = `${num1 + num2 - 3}`;
+        addQ("Càlcul Mental", qText1, correct1, f1, f2);
 
         if (uniqueQuestions.length < 1000) {
-          const qText2 = `Pregunta d'entrenament de memòria #${count}: Quina d'aquestes opcions és la xifra correcta ${count + 100}?`;
-          addQ("Repte de Memòria", qText2, `${count + 100}`, `${count + 105}`, `${count + 95}`);
+          const multResult = num1 * 4;
+          const qText2 = `Quant és el resultat de multiplicar ${num1} x 4?`;
+          const correct2 = `${multResult}`;
+          const f3 = `${multResult + 4}`;
+          const f4 = `${multResult - 2}`;
+          addQ("Càlcul Mental", qText2, correct2, f3, f4);
         }
       }
 
-      // Barrejar tot el banc de preguntes
+      // Mezclar aleatoriamente el banco entero
       for (let i = uniqueQuestions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [uniqueQuestions[i], uniqueQuestions[j]] = [uniqueQuestions[j], uniqueQuestions[i]];

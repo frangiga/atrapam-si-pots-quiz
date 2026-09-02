@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrenament 1000 - Atrapa'm si pots</title>
+  <style>
+    :root {
+      --primary: #e65100;
+      --primary-hover: #ef6c00;
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #2c3e50;
+      --correct: #2e7d32;
+      --incorrect: #c62828;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .quiz-container { background: var(--card-bg); width: 100%; max-width: 600px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+    
+    .brand-logo {
+      display: block;
+      margin: 0 auto 10px auto;
+      max-width: 200px;
+      height: auto;
+    }
+
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 12px; }
+    .score-board { font-weight: bold; font-size: 1.1rem; color: var(--primary); }
+    .progress { font-weight: bold; font-size: 0.9rem; color: #666; }
+    .timer { font-weight: bold; font-size: 1.1rem; background: #ffe0b2; padding: 4px 12px; border-radius: 20px; }
+    .category-badge { display: inline-block; align-self: flex-start; background: #e3f2fd; color: #1565c0; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+    .question-text { font-size: 1.25rem; font-weight: 600; line-height: 1.4; margin-top: 10px; }
+    .options-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .option-btn { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; padding: 14px 18px; font-size: 1rem; text-align: left; cursor: pointer; transition: all 0.2s ease; font-weight: 500; }
+    .option-btn:hover:not(:disabled) { background: #eef2f5; border-color: var(--primary); }
+    .option-btn.correct { background-color: #e8f5e9 !important; border-color: var(--correct) !important; color: var(--correct); font-weight: bold; }
+    .option-btn.incorrect { background-color: #ffebee !important; border-color: var(--incorrect) !important; color: var(--incorrect); }
+    .next-btn, .restart-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; }
+    .next-btn:hover, .restart-btn:hover { background-color: var(--primary-hover); }
+    .hidden { display: none !important; }
+    .results-screen { text-align: center; display: flex; flex-direction: column; gap: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <!-- Logo del programa -->
+    <img class="brand-logo" src="https://static.apuntmedia.es/clip/da57fb20-aa5d-4c8c-92e0-cfb8d38c7949_source-aspect-ratio_360w_0.webp" alt="Atrapa'm si pots Logo">
+
+    <div id="game-screen">
+      <div class="header">
+        <span class="score-board" id="score">Punts: 0</span>
+        <span class="progress" id="progress">Pregunta 1/1000</span>
+        <span class="timer" id="timer">⏱️ 15s</span>
+      </div>
+      <div style="margin-top: 15px;">
+        <span class="category-badge" id="category">Categoria</span>
+      </div>
+      <h2 class="question-text" id="question">Carregant...</h2>
+      
+      <div class="options-grid" id="options"></div>
+
+      <button id="next-btn" class="next-btn hidden">Següent pregunta</button>
+    </div>
+
+    <div id="results-screen" class="results-screen hidden">
+      <h2>Entrenament Finalitzat! 🎉</h2>
+      <p id="final-score" style="font-size: 1.4rem;">Has aconseguit X punts.</p>
+      <button class="restart-btn" onclick="startGame()">Tornar a jugar</button>
+    </div>
+  </div>
+
+  <script>
+    function generate1000Questions() {
+      const db = [];
+      
+      const comarques = [
+        { nom: "La Marina Alta", cap: "Dénia" }, { nom: "La Marina Baixa", cap: "La Vila Joiosa" },
+        { nom: "La Safor", cap: "Gandia" }, { nom: "La Ribera Alta", cap: "Alzira" },
+        { nom: "La Ribera Baixa", cap: "Sueca" }, { nom: "L'Alcoià", cap: "Alcoi" },
+        { nom: "El Comtat", cap: "Cocentaina" }, { nom: "L'Alt Maestrat", cap: "Albocàsser" },
+        { nom: "El Baix Maestrat", cap: "Vinaròs" }, { nom: "La Plana Alta", cap: "Castelló de la Plana" },
+        { nom: "La Plana Baixa", cap: "Borriana" }, { nom: "El Camp de Morvedre", cap: "Sagunt" },
+        { nom: "El Camp de Túria", cap: "Llíria" }, { nom: "L'Horta Nord", cap: "Puçol" },
+        { nom: "L'Horta Sud", cap: "Torrent" }, { nom: "La Vall d'Albaida", cap: "Ontinyent" },
+        { nom: "El Baix Vinalopó", cap: "Elx" }, { nom: "L'Alt Vinalopó", cap: "Villena" },
+        { nom: "El Vinalopó Mitjà", cap: "Elda" }, { nom: "La Vega Baixa", cap: "Oriola" },
+        { nom: "Els Ports", cap: "Morella" }, { nom: "L'Alt Palància", cap: "Sogorb" }
+      ];
+
+      const capitalsMon = [
+        { pais: "França", cap: "París", f1: "Lió", f2: "Marsella" },
+        { pais: "Itàlia", cap: "Roma", f1: "Milà", f2: "Nàpols" },
+        { pais: "Alemanya", cap: "Berlín", f1: "Múnic", f2: "Frankfurt" },
+        { pais: "Japó", cap: "Tòquio", f1: "Kioto", f2: "Osaka" },
+        { pais: "Portugal", cap: "Lisboa", f1: "Porto", f2: "Coïmbra" },
+        { pais: "Regne Unit", cap: "Londres", f1: "Manchester", f2: "Liverpool" },
+        { pais: "Grècia", cap: "Atenes", f1: "Salònica", f2: "Heràclion" },
+        { pais: "Egipte", cap: "El Caire", f1: "Alexandria", f2: "Gizeh" },
+        { pais: "Austràlia", cap: "Canberra", f1: "Sydney", f2: "Melbourne" },
+        { pais: "Canadà", cap: "Ottawa", f1: "Toronto", f2: "Vancouver" },
+        { pais: "Brasil", cap: "Brasília", f1: "Rio de Janeiro", f2: "São Paulo" }
+      ];
+
+      const preguntesFixes = [
+        { category: "Cultura Valenciana", question: "Quin monument gòtic civil de València és Patrimoni de la Humanitat?", options: ["La Llotja de la Seda", "Torres de Serrans", "El Micalet"], answer: "La Llotja de la Seda" },
+        { category: "Geografia Valenciana", question: "Quin és el punt més alt de la Comunitat Valenciana?", options: ["El Calderón", "Penyagolosa", "Aitana"], answer: "El Calderón" },
+        { category: "Festes i Tradicions", question: "En quina ciutat se celebra el famós Misteri medieval?", options: ["Elx", "Oriola", "Castelló"], answer: "Elx" },
+        { category: "Gastronomia", question: "Quin ingredient és la base tradicional de l'orxata?", options: ["Xufa", "Ametlla", "Arròs"], answer: "Xufa" },
+        { category: "Història Valenciana", question: "En quin any va entrar Jaume I a la ciutat de València?", options: ["1238", "1492", "1707"], answer: "1238" },
+        { category: "Art i Literatura", question: "Qui és l'autor de la meua obra clàssica 'Tirant lo Blanch'?", options: ["Joanot Martorell", "Ausiàs March", "Jordi de Sant Jordi"], answer: "Joanot Martorell" },
+        { category: "Festes i Tradicions", question: "A quina localitat se celebra 'La Tomatina'?", options: ["Buñol", "Xàtiva", "Morella"], answer: "Buñol" },
+        { category: "Geografia Valenciana", question: "Quina illa habitada es troba davant de Santa Pola?", options: ["Tabarca", "Columbrets", "Benidorm"], answer: "Tabarca" },
+        { category: "Art i Literatura", question: "Quin pintor valencià destaca per la seua llum i escenes de platja?", options: ["Joaquim Sorolla", "Josep de Ribera", "Ignasi Pinazo"], answer: "Joaquim Sorolla" },
+        { category: "Música", question: "Qui va composar el 'Concierto de Aranjuez'?", options: ["Joaquín Rodrigo", "Vicent Martín i Soler", "Ruperto Chapí"], answer: "Joaquín Rodrigo" },
+        { category: "Natura Valenciana", question: "Quin d'aquests paratges és una llaguna d'aigua dolça molt propera a València?", options: ["L'Albufera", "El Prat de Cabanes", "Las Salinas de Torrevieja"], answer: "L'Albufera" },
+        { category: "Història", question: "Quina va ser la seua data d'abolició dels Furs Valencians?", options: ["1707", "1808", "1936"], answer: "1707" }
+      ];
+
+      db.push(...preguntesFixes);
+
+      comarques.forEach(c => {
+        const alt1 = comarques[(comarques.indexOf(c) + 1) % comarques.length].cap;
+        const alt2 = comarques[(comarques.indexOf(c) + 2) % comarques.length].cap;
+        db.push({
+          category: "Geografia Valenciana",
+          question: `Quina és la capital de la comarca de ${c.nom}?`,
+          options: [c.cap, alt1, alt2],
+          answer: c.cap
+        });
+        db.push({
+          category: "Geografia Valenciana",
+          question: `A quina comarca valenciana pertany el municipi de ${c.cap}?`,
+          options: [c.nom, comarques[(comarques.indexOf(c) + 3) % comarques.length].nom, comarques[(comarques.indexOf(c) + 4) % comarques.length].nom],
+          answer: c.nom
+        });
+      });
+
+      capitalsMon.forEach(c => {
+        db.push({
+          category: "Cultura General",
+          question: `Quina és la capital de ${c.pais}?`,
+          options: [c.cap, c.f1, c.f2],
+          answer: c.cap
+        });
+      });
+
+      for (let i = 1; i <= 300; i++) {
+        const a = Math.floor(Math.random() * 25) + 2;
+        const b = Math.floor(Math.random() * 12) + 2;
+        const op = i % 3;
+        
+        if (op === 0) {
+          const ans = a * b;
+          db.push({
+            category: "Càlcul Ràpid",
+            question: `Quant és ${a} × ${b}?`,
+            options: [ans.toString(), (ans + 3).toString(), (ans - 2).toString()],
+            answer: ans.toString()
+          });
+        } else if (op === 1) {
+          const ans = (a * 10) + b;
+          db.push({
+            category: "Càlcul Ràpid",
+            question: `Quant és (${a} × 10) + ${b}?`,
+            options: [ans.toString(), (ans + 5).toString(), (ans - 5).toString()],
+            answer: ans.toString()
+          });
+        } else {
+          const num1 = a * 10;
+          const num2 = b * 3;
+          const ans = num1 - num2;
+          db.push({
+            category: "Càlcul Ràpid",
+            question: `Quant és ${num1} - ${num2}?`,
+            options: [ans.toString(), (ans + 4).toString(), (ans - 4).toString()],
+            answer: ans.toString()
+          });
+        }
+      }
+
+      for (let i = 1; i <= 600; i++) {
+        const num = Math.floor(Math.random() * 500) + 10;
+        db.push({
+          category: "Agilitat Mental",
+          question: `Quin és el doble del número ${num}?`,
+          options: [(num * 2).toString(), (num * 2 + 10).toString(), (num * 2 - 10).toString()],
+          answer: (num * 2).toString()
+        });
+      }
+
+      return db.slice(0, 1000);
+    }
+
+    let questions = generate1000Questions();
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timerInterval;
+    let timeLeft = 15;
+
+    const gameScreen = document.getElementById('game-screen');
+    const resultsScreen = document.getElementById('results-screen');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const categoryEl = document.getElementById('category');
+    const scoreEl = document.getElementById('score');
+    const progressEl = document.getElementById('progress');
+    const timerEl = document.getElementById('timer');
+    const nextBtn = document.getElementById('next-btn');
+
+    function startGame() {
+      questions.sort(() => Math.random() - 0.5);
+      currentQuestionIndex = 0;
+      score = 0;
+      scoreEl.innerText = `Punts: ${score}`;
+      resultsScreen.classList.add('hidden');
+      gameScreen.classList.remove('hidden');
+      showQuestion();
+    }
+
+    function showQuestion() {
+      resetState();
+      const q = questions[currentQuestionIndex];
+      categoryEl.innerText = q.category;
+      questionEl.innerText = q.question;
+      progressEl.innerText = `Pregunta ${currentQuestionIndex + 1}/1000`;
+
+      const options = [...q.options].sort(() => Math.random() - 0.5);
+
+      options.forEach(opt => {
+        const button = document.createElement('button');
+        button.innerText = opt;
+        button.classList.add('option-btn');
+        button.onclick = () => selectAnswer(button, opt, q.answer);
+        optionsEl.appendChild(button);
+      });
+
+      startTimer();
+    }
+
+    function resetState() {
+      clearInterval(timerInterval);
+      timeLeft = 15;
+      timerEl.innerText = `⏱️ ${timeLeft}s`;
+      nextBtn.classList.add('hidden');
+      optionsEl.innerHTML = '';
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.innerText = `⏱️ ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          autoSelectCorrect();
+        }
+      }, 1000);
+    }
+
+    function selectAnswer(selectedBtn, selectedOpt, correctOpt) {
+      clearInterval(timerInterval);
+      const buttons = optionsEl.querySelectorAll('.option-btn');
+      
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.innerText === correctOpt) {
+          btn.classList.add('correct');
+        }
+      });
+
+      if (selectedOpt === correctOpt) {
+        score += 10;
+        scoreEl.innerText = `Punts: ${score}`;
+      } else {
+        selectedBtn.classList.add('incorrect');
+      }
+
+      nextBtn.classList.remove('hidden');
+    }
+
+    function autoSelectCorrect() {
+      const q = questions[currentQuestionIndex];
+      const buttons = optionsEl.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.innerText === q.answer) {
+          btn.classList.add('correct');
+        }
+      });
+      nextBtn.classList.remove('hidden');
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        endGame();
+      }
+    });
+
+    function endGame() {
+      gameScreen.classList.add('hidden');
+      resultsScreen.classList.remove('hidden');
+      document.getElementById('final-score').innerText = `Has aconseguit ${score} de ${questions.length * 10} punts possibles!`;
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
